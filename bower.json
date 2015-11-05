@@ -1,15 +1,15 @@
 {
-  "name": "webgl-heatmap",
+  "name": "webgl-heatmap-ftm",
   "main": "webgl-heatmap.js",
   "version": "0.0.1",
-  "homepage": "https://github.com/pyalot/webgl-heatmap",
+  "homepage": "https://github.com/Mploki/webgl-heatmap",
   "description": "webgl-heatmap.js is a JavaScript library for high performance heatmap display.",
   "keywords": [
     "webgl",
     "heatmap"
   ],
   "authors": [
-    "Florian Bösch"
+    "Mploki"
   ],
   "license": "MIT",
   "ignore": [

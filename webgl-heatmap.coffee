@@ -857,25 +857,35 @@ class WebGLHeatmap
         @gl.blendFunc @gl.ONE, @gl.ONE
 
         if gradientTexture
-            textureGradient = @gradientTexture = new Texture(@gl, channels:'rgba').bind(0).setSize(2, 2).nearest().clampToEdge()
-            if typeof gradientTexture == 'string'
-                image = new Image()
-                image.onload = ->
-                    textureGradient.bind().upload(image)
-                image.src = gradientTexture
-            else
-                if gradientTexture.width > 0 and gradientTexture.height > 0
-                    textureGradient.upload(gradientTexture)
-                else
-                    gradientTexture.onload = ->
-                        textureGradient.upload(gradientTexture)
-
-            getColorFun = '''
-                uniform sampler2D gradientTexture;
+            colmap = gradientTexture
+            getColorFun = """
                 vec3 getColor(float intensity){
-                    return texture2D(gradientTexture, vec2(intensity, 0.0)).rgb;
+                    vec3 color = (
+                        fade(-0.05, 0.05, intensity)*vec3(#{colmap[0].r},#{colmap[0].g},#{colmap[0].b}) +
+                        fade(0.0, 0.10, intensity)*vec3(#{colmap[1].r},#{colmap[1].g},#{colmap[1].b}) +
+                        fade(0.05, 0.15, intensity)*vec3(#{colmap[2].r},#{colmap[2].g},#{colmap[2].b}) +
+                        fade(0.10, 0.20, intensity)*vec3(#{colmap[3].r},#{colmap[3].g},#{colmap[3].b}) +
+                        fade(0.15, 0.25, intensity)*vec3(#{colmap[4].r},#{colmap[4].g},#{colmap[4].b}) +
+                        fade(0.20, 0.30, intensity)*vec3(#{colmap[5].r},#{colmap[5].g},#{colmap[5].b}) +
+                        fade(0.25, 0.35, intensity)*vec3(#{colmap[6].r},#{colmap[6].g},#{colmap[6].b}) +
+                        fade(0.30, 0.40, intensity)*vec3(#{colmap[7].r},#{colmap[7].g},#{colmap[7].b}) +
+                        fade(0.35, 0.45, intensity)*vec3(#{colmap[8].r},#{colmap[8].g},#{colmap[8].b}) +
+                        fade(0.40, 0.50, intensity)*vec3(#{colmap[9].r},#{colmap[9].g},#{colmap[9].b}) +
+                        fade(0.45, 0.55, intensity)*vec3(#{colmap[10].r},#{colmap[10].g},#{colmap[10].b}) +
+                        fade(0.50, 0.60, intensity)*vec3(#{colmap[11].r},#{colmap[11].g},#{colmap[11].b}) +
+                        fade(0.55, 0.65, intensity)*vec3(#{colmap[12].r},#{colmap[12].g},#{colmap[12].b}) +
+                        fade(0.60, 0.70, intensity)*vec3(#{colmap[13].r},#{colmap[13].g},#{colmap[13].b}) +
+                        fade(0.65, 0.75, intensity)*vec3(#{colmap[14].r},#{colmap[14].g},#{colmap[14].b}) +
+                        fade(0.70, 0.80, intensity)*vec3(#{colmap[15].r},#{colmap[15].g},#{colmap[15].b}) +
+                        fade(0.75, 0.85, intensity)*vec3(#{colmap[16].r},#{colmap[16].g},#{colmap[16].b}) +
+                        fade(0.80, 0.90, intensity)*vec3(#{colmap[17].r},#{colmap[17].g},#{colmap[17].b}) +
+                        fade(0.85, 0.95, intensity)*vec3(#{colmap[18].r},#{colmap[18].g},#{colmap[18].b}) +
+                        fade(0.90, 1.0, intensity)*vec3(#{colmap[19].r},#{colmap[19].g},#{colmap[19].b}) +
+                        smoothstep(0.95, 1.0, intensity)*vec3(#{colmap[20].r},#{colmap[20].g},#{colmap[20].b})
+                    );
+                    return color;
                 }
-            '''
+            """
         else
             textureGradient = null
             getColorFun = '''
